@@ -25,3 +25,6 @@ Lớp: DX23TT9
 ## 5. Kế hoạch tuần sau
 - Xây dựng chức năng cho website
 - Tiếp tục cập nhật tiến độ lên GitHub
+
+## 6. Hướng dẫn chạy project
+python manage.py runserver
