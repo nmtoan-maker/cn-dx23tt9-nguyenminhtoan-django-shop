@@ -1,3 +1,5 @@
+Họ tên: Nguyễn Minh Toàn  
+Lớp: DX23TT9  
 # Báo cáo tuần 1
 
 ## 1. Nội dung thực hiện
