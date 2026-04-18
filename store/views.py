@@ -1,47 +1,84 @@
-import csv
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
-from .models import Product
-
+from django.shortcuts import render, redirect
+from .models import Product, Category
 
 def product_list(request):
-    keyword = request.GET.get('q')
-    category = request.GET.get('category')
+    category_id = request.GET.get('category')
 
+    categories = Category.objects.all()
     products = Product.objects.all()
 
-    if keyword:
-        products = products.filter(name__icontains=keyword)
+    if category_id:
+        products = products.filter(category__id=category_id)
 
-    if category:
-        products = products.filter(category=category)
+    cart = request.session.get('cart', {})
+    cart_count = sum(cart.values())
 
-    return render(request, 'store/product_list.html', {'products': products})
+    return render(request, 'store/product_list.html', {
+        'products': products,
+        'cart_count': cart_count,
+        'categories': categories,
+        'current_category': category_id,
+    })
+
+
+def add_to_cart(request, id):
+    cart = request.session.get('cart', {})
+
+    id = str(id)
+
+    if id in cart:
+        cart[id] += 1
+    else:
+        cart[id] = 1
+
+    request.session['cart'] = cart
+    return redirect('/')
+
+
+def cart_view(request):
+    cart = request.session.get('cart', {})
+    products = []
+    total = 0
+
+    for id, quantity in cart.items():
+        product = Product.objects.filter(id=id).first()
+        if product:
+            product.quantity = quantity
+            product.total_price = product.price * quantity
+            total += product.total_price
+            products.append(product)
+
+    cart_count = sum(cart.values())
+
+    return render(request, 'store/cart.html', {
+        'products': products,
+        'total': total,
+        'cart_count': cart_count,
+    })
 
 
 def product_detail(request, id):
-    product = get_object_or_404(Product, id=id)
-    return render(request, 'store/product_detail.html', {'product': product})
+    product = Product.objects.filter(id=id).first()
+    if not product:
+        from django.http import Http404
+        raise Http404
+
+    cart = request.session.get('cart', {})
+    cart_count = sum(cart.values())
+
+    return render(request, 'store/product_detail.html', {
+        'product': product,
+        'cart_count': cart_count,
+    })
 
 
-def import_csv(request):
-    file_path = 'products.csv'
+def remove_from_cart(request, id):
+    cart = request.session.get('cart', {})
 
-    Product.objects.all().delete()
+    id = str(id)
 
-    with open(file_path, encoding='utf-8') as f:
-        reader = csv.reader(f)
-        next(reader)
+    if id in cart:
+        del cart[id]
 
-        for row in reader:
-            try:
-                Product.objects.create(
-                    name=row[0],
-                    price=int(row[1]),
-                    description=row[2],
-                    category='laptop'  # mặc định
-                )
-            except:
-                continue
-
-    return HttpResponse("Import thành công!")
+    request.session['cart'] = cart
+    return redirect('/cart/')
