@@ -84,6 +84,7 @@
 <body>
 
 <!-- ===== NAVBAR ===== -->
+ 
 <nav class="navbar navbar-dark px-3 px-md-4">
     <a class="navbar-brand d-flex align-items-center gap-2 text-white text-decoration-none" href="/">
         <i class="fa-solid fa-store fs-5"></i>
@@ -94,6 +95,39 @@
         Giỏ hàng
         <span class="cart-badge">{{ cart_count }}</span>
     </a>
+    <div class="d-flex align-items-center ms-3">
+{% if user.is_authenticated %}
+    <div class="dropdown">
+        <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            👋 {{ user.username }}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+                <a class="dropdown-item" href="{% url 'my_orders' %}">
+                    🧾 Lịch sử đơn hàng
+                </a>
+            </li>
+
+            {% if user.is_superuser %}
+            <li>
+                <a class="dropdown-item" href="/admin/">
+                    ⚙️ Quản trị hệ thống
+                </a>
+            </li>
+            {% endif %}
+
+            <li>
+                <a class="dropdown-item" href="{% url 'logout' %}">
+                    🚪 Đăng xuất
+                </a>
+            </li>
+        </ul>
+    </div>
+{% else %}
+    <a href="{% url 'login' %}" class="btn btn-light btn-sm me-2">Đăng nhập</a>
+    <a href="{% url 'register' %}" class="btn btn-outline-light btn-sm">Đăng ký</a>
+{% endif %}
+</div>
 </nav>
 
 <!-- ===== CONTENT ===== -->

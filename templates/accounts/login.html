@@ -1,0 +1,7 @@
+<h2>Đăng nhập</h2>
+<form method="post">
+    {% csrf_token %}
+    <input name="username" placeholder="Username"><br>
+    <input type="password" name="password" placeholder="Password"><br>
+    <button type="submit">Đăng nhập</button>
+</form>
