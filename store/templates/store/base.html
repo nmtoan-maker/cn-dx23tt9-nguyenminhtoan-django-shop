@@ -37,6 +37,64 @@
             letter-spacing: .5px;
         }
 
+        /* ===== SEARCH ===== */
+        .search-form {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,.2);
+            border-radius: 50px;
+            padding: 4px 6px 4px 16px;
+            width: 320px;
+            border: 1.5px solid rgba(255,255,255,.4);
+            transition: background .2s, border-color .2s;
+        }
+
+        .search-form:focus-within {
+            background: rgba(255,255,255,.95);
+            border-color: #fff;
+        }
+
+        .search-form input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: .93rem;
+            width: 100%;
+        }
+
+        .search-form:focus-within input {
+            color: #222;
+        }
+
+        .search-form input::placeholder {
+            color: rgba(255,255,255,.75);
+        }
+
+        .search-form:focus-within input::placeholder {
+            color: #aaa;
+        }
+
+        .search-form button {
+            background: rgba(255,255,255,.25);
+            border: none;
+            color: #fff;
+            border-radius: 50px;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: background .2s;
+            flex-shrink: 0;
+        }
+
+        .search-form:focus-within button {
+            background: var(--brand);
+            color: #fff;
+        }
+
+        .search-form button:hover {
+            background: var(--brand-dark);
+        }
+
         .btn-cart {
             border: 2px solid rgba(255,255,255,.7);
             color: #fff;
@@ -85,49 +143,61 @@
 
 <!-- ===== NAVBAR ===== -->
  
-<nav class="navbar navbar-dark px-3 px-md-4">
+<nav class="navbar navbar-dark px-3 px-md-4 d-flex align-items-center">
     <a class="navbar-brand d-flex align-items-center gap-2 text-white text-decoration-none" href="/">
         <i class="fa-solid fa-store fs-5"></i>
         <span>TechShop – Linh kiện máy tính</span>
     </a>
-    <a href="/cart/" class="btn-cart text-decoration-none d-flex align-items-center gap-2">
-        <i class="fa-solid fa-cart-shopping"></i>
-        Giỏ hàng
-        <span class="cart-badge">{{ cart_count }}</span>
-    </a>
-    <div class="d-flex align-items-center ms-3">
-{% if user.is_authenticated %}
-    <div class="dropdown">
-        <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            👋 {{ user.username }}
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end">
-            <li>
-                <a class="dropdown-item" href="{% url 'my_orders' %}">
-                    🧾 Lịch sử đơn hàng
-                </a>
-            </li>
 
-            {% if user.is_superuser %}
-            <li>
-                <a class="dropdown-item" href="/admin/">
-                    ⚙️ Quản trị hệ thống
-                </a>
-            </li>
+    <div class="d-flex align-items-center gap-3 ms-auto">
+        <form class="search-form" action="/" method="get">
+            {% if request.GET.category %}
+                <input type="hidden" name="category" value="{{ request.GET.category }}">
             {% endif %}
+            <input type="text" name="q" placeholder="Tìm kiếm sản phẩm..." value="{{ request.GET.q }}" autocomplete="off">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
 
-            <li>
-                <a class="dropdown-item" href="{% url 'logout' %}">
-                    🚪 Đăng xuất
-                </a>
-            </li>
-        </ul>
+        <a href="/cart/" class="btn-cart text-decoration-none d-flex align-items-center gap-2 flex-shrink-0">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Giỏ hàng
+            <span class="cart-badge">{{ cart_count }}</span>
+        </a>
+
+        <div class="d-flex align-items-center flex-shrink-0">
+            {% if user.is_authenticated %}
+            <div class="dropdown">
+                <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    👋 {{ user.username }}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'my_orders' %}">
+                            🧾 Lịch sử đơn hàng
+                        </a>
+                    </li>
+
+                    {% if user.is_superuser %}
+                    <li>
+                        <a class="dropdown-item" href="/admin/">
+                            ⚙️ Quản trị hệ thống
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    <li>
+                        <a class="dropdown-item" href="{% url 'logout' %}">
+                            🚪 Đăng xuất
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            {% else %}
+            <a href="{% url 'login' %}" class="btn btn-light btn-sm me-2">Đăng nhập</a>
+            <a href="{% url 'register' %}" class="btn btn-outline-light btn-sm">Đăng ký</a>
+            {% endif %}
+        </div>
     </div>
-{% else %}
-    <a href="{% url 'login' %}" class="btn btn-light btn-sm me-2">Đăng nhập</a>
-    <a href="{% url 'register' %}" class="btn btn-outline-light btn-sm">Đăng ký</a>
-{% endif %}
-</div>
 </nav>
 
 <!-- ===== CONTENT ===== -->

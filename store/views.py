@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from .models import Product, Category, Order, OrderItem
 
 def product_list(request):
     category_id = request.GET.get('category')
+    query = request.GET.get('q', '').strip()
 
     categories = Category.objects.all()
     products = Product.objects.all()
@@ -11,14 +13,23 @@ def product_list(request):
     if category_id:
         products = products.filter(category__id=category_id)
 
+    if query:
+        products = products.filter(name__icontains=query)
+
+    paginator = Paginator(products, 15)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     cart = request.session.get('cart', {})
     cart_count = sum(cart.values())
 
     return render(request, 'store/product_list.html', {
-        'products': products,
+        'products': page_obj,
+        'page_obj': page_obj,
         'cart_count': cart_count,
         'categories': categories,
         'current_category': category_id,
+        'query': query,
     })
 
 

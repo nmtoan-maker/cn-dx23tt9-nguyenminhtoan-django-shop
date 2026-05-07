@@ -202,7 +202,13 @@
     <div class="col-12 col-md-9 col-xl-10">
         <span class="section-header">
             <i class="fa-solid fa-fire-flame-curved me-1" style="color:var(--brand)"></i>
-            {% if current_category %}Sản phẩm theo danh mục{% else %}Tất cả sản phẩm{% endif %}
+            {% if query %}
+                Kết quả tìm kiếm: "{{ query }}"
+            {% elif current_category %}
+                Sản phẩm theo danh mục
+            {% else %}
+                Tất cả sản phẩm
+            {% endif %}
         </span>
 
         {% if products %}
@@ -242,9 +248,53 @@
         {% else %}
         <div class="empty-state">
             <i class="fa-regular fa-folder-open d-block"></i>
-            <p class="fw-semibold fs-5">Không có sản phẩm nào</p>
+            {% if query %}
+                <p class="fw-semibold fs-5">Không tìm thấy sản phẩm nào cho "{{ query }}"</p>
+            {% else %}
+                <p class="fw-semibold fs-5">Không có sản phẩm nào</p>
+            {% endif %}
             <a href="/" class="btn btn-outline-success mt-2">Xem tất cả sản phẩm</a>
         </div>
+        {% endif %}
+
+        {% if page_obj.paginator.num_pages > 1 %}
+        <nav class="mt-4 d-flex justify-content-center align-items-center gap-1">
+            {% if page_obj.has_previous %}
+                <a href="?{% if current_category %}category={{ current_category }}&{% endif %}{% if query %}q={{ query }}&{% endif %}page={{ page_obj.previous_page_number }}"
+                   class="btn btn-outline-success btn-sm rounded-pill px-3">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+            {% else %}
+                <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" disabled>
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if num == page_obj.number %}
+                    <button class="btn btn-success btn-sm rounded-pill" style="min-width:36px">{{ num }}</button>
+                {% elif num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+                    <a href="?{% if current_category %}category={{ current_category }}&{% endif %}{% if query %}q={{ query }}&{% endif %}page={{ num }}"
+                       class="btn btn-outline-success btn-sm rounded-pill" style="min-width:36px">{{ num }}</a>
+                {% elif num == 1 or num == page_obj.paginator.num_pages %}
+                    <a href="?{% if current_category %}category={{ current_category }}&{% endif %}{% if query %}q={{ query }}&{% endif %}page={{ num }}"
+                       class="btn btn-outline-success btn-sm rounded-pill" style="min-width:36px">{{ num }}</a>
+                {% elif num == page_obj.number|add:"-3" or num == page_obj.number|add:"3" %}
+                    <span class="px-1 text-muted">…</span>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?{% if current_category %}category={{ current_category }}&{% endif %}{% if query %}q={{ query }}&{% endif %}page={{ page_obj.next_page_number }}"
+                   class="btn btn-outline-success btn-sm rounded-pill px-3">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            {% else %}
+                <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" disabled>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            {% endif %}
+        </nav>
         {% endif %}
     </div>
 
