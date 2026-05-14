@@ -23,18 +23,79 @@ Website bán linh kiện máy tính xây dựng bằng Django.
 * Python
 * Django
 * HTML, CSS
-
-## Hướng dẫn chạy project
-
-pip install -r setup/requirements.txt
+Hướng dẫn cài đặt
+1️⃣ Clone project
+git clone https://github.com/your-username/computer-store.git
+cd computer-store
+2️⃣ Tạo môi trường ảo
+python -m venv venv
+Kích hoạt môi trường
+Windows
+venv\Scripts\activate
+Linux / MacOS
+source venv/bin/activate
+3️⃣ Cài đặt Django
+pip install django
+4️⃣ Migration database
+python manage.py makemigrations
 python manage.py migrate
+5️⃣ Tạo tài khoản admin
+python manage.py createsuperuser
+6️⃣ Chạy server
 python manage.py runserver
 
-Truy cập: http://127.0.0.1:8000
-## Cấu trúc thư mục
+Mở trình duyệt:
 
-- computer_store/: cấu hình Django
-- store/: app chính
-- setup/: hướng dẫn cài đặt
-- thesis/: tài liệu đồ án
-- progress-report/: báo cáo tiến độ
+http://127.0.0.1:8000/
+🔐 Trang quản trị Django Admin
+
+Truy cập:
+
+http://127.0.0.1:8000/admin/
+
+Đăng nhập bằng tài khoản admin đã tạo.
+
+🛒 Chức năng giỏ hàng
+
+Hệ thống sử dụng Django Session để lưu giỏ hàng tạm thời.
+
+Các chức năng gồm:
+
+Thêm sản phẩm vào giỏ
+Cập nhật số lượng
+Xóa sản phẩm
+Tính tổng tiền
+Thanh toán đơn hàng
+📷 Giao diện hệ thống
+
+Website được thiết kế theo phong cách thương mại điện tử hiện đại:
+
+Responsive
+Dễ sử dụng
+Tối ưu trải nghiệm người dùng
+Giao diện sáng, trực quan
+📚 Kiến thức áp dụng
+
+Trong quá trình thực hiện dự án, đã áp dụng:
+
+Django MTV Architecture
+Django ORM
+Django Session
+Authentication System
+Template Engine
+CRUD Operations
+Bootstrap UI Design
+🎯 Mục tiêu dự án
+Xây dựng website bán hàng bằng Django
+Thực hành thiết kế database
+Áp dụng CRUD và Authentication
+Hiểu quy trình triển khai hệ thống web
+Nâng cao kỹ năng lập trình Python Django
+
+📄 License
+
+Dự án được sử dụng cho mục đích học tập và nghiên cứu.
+
+❤️ Cảm ơn
+
+Cảm ơn thầy/cô và mọi người đã xem dự án TechShop.
